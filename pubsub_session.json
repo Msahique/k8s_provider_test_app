@@ -1,0 +1,15 @@
+{
+  "pubsub_url": "http://127.0.0.1:8000",
+  "applicationCode": "provider-app",
+  "instanceId": "",
+  "memberClass": "",
+  "memberCode": "",
+  "requestId": "279ce9b9-2e81-43f5-a7b6-b0da49b45fca",
+  "status": "approved",
+  "apiKey": "psk_bqxYEdFAnwdHMRhJEFCxoMsgWfcFQQze",
+  "base": "/r1/DEFAULT/GOV/ministry-health/provider-app",
+  "role": "subscriber",
+  "roomName": null,
+  "collectedAt": "2026-07-31T14:15:15.720448+00:00",
+  "detail": ""
+}

@@ -1,6 +1,6 @@
 # Provider application: the FastAPI "Simple FastAPI Database API".
-# Serves a dashboard on / (APIs, Logs, Inbox tabs), a /qry endpoint that
-# returns real rows from MySQL, and /incoming_message which stores consumer
+# Serves a dashboard on / (APIs, Logs, Inbox, Pub/Sub tabs), a /qry endpoint
+# that returns real rows from MySQL, and /incoming_message which stores consumer
 # messages in inbox.json.
 ---
 apiVersion: v1
@@ -18,6 +18,53 @@ data:
   IM_INBOX_MAX: "500"       # inbox ring buffer size
   IM_LOG_HEALTH: "false"    # set true to also log kubelet probe traffic
   IM_DEFAULT_ROOM: "default-room"  # used when an event arrives without a room
+
+  # --- Pub/Sub tab -----------------------------------------------------------
+  # This application is registered and approved BY THE ADMIN ON THE PUB/SUB BB,
+  # as a SUBSCRIBER. It does NOT register itself: it looks up the approved
+  # registration bearing its application code and collects the API key + base
+  # path the BB issued. The subscriber screen appears only while the BB accepts
+  # that key (checked live on /catalog/rooms); until then the tab says "waiting".
+  #
+  # Base URL of the Pub/Sub BB, as reachable FROM THIS POD: the Service name and
+  # its port, NOT an ingress prefix (that only applies through the gateway).
+  # Cross-namespace, qualify it: http://pubsub-bb-a.<namespace>.svc.cluster.local:8000
+  # Leave it empty to switch the tab off.
+  PUBSUB_URL: "http://pubsub-bb-a:7000"
+  # The application code the admin registered this app under. Defaults to
+  # "provider-app"; set it here if the admin used a different one.
+  PUBSUB_APP_CODE: "provider-app"
+  #
+  # Optional, normally unset:
+  #   PUBSUB_MEMBER_CODE, PUBSUB_MEMBER_CLASS, PUBSUB_INSTANCE
+  #                      extra filters, for a BB carrying several registrations
+  #                      of the same application code
+  #   PUBSUB_REQUEST_ID  id of the approved registration - skips the lookup, and
+  #                      is the way in if /admin/api is closed to this pod
+  #   PUBSUB_STATE_FILE  where the collected key is cached
+  #                      (default $IM_DATA_DIR/pubsub_session.json, i.e. the PVC)
+  #   PUBSUB_BASE + PUBSUB_API_KEY
+  #                      escape hatch: credentials handed over by hand, with
+  #                      nothing fetched from the BB at all
+
+  # --- PULL through the Information Mediator ---------------------------------
+  # direct (default) = this app polls the Pub/Sub BB itself.
+  # im               = the pull and its acknowledgement go to THIS APP'S OWN
+  #                    security gateway (SG2 for a provider on cluster B), which
+  #                    resolves the service id to the Pub/Sub BB's /im/pull/v1.
+  # Browsing the catalog, managing subscriptions and collecting the API key stay
+  # direct in both modes - they are not published as IM services - so PUBSUB_URL
+  # above is required either way.
+  PUBSUB_TRANSPORT: "im"
+  SG_URL: "http://im-ss2-service:8081"      # this app's gateway, admin port
+  IM_INSTANCE: "GOVSTACK"
+  ENTITY_CLASS: "GOV"
+  ENTITY_CODE: "2001"                        # -> IM-Consumer
+  APPLICATION_CODE: "provider-app"           #    GOVSTACK/GOV/2001/provider-app
+  # The two services published on the Pub/Sub side's gateway. Both are needed:
+  # without the ack an event is re-delivered every PULL_VISIBILITY_SECONDS.
+  PUBSUB_PULL_SERVICE: "GOVSTACK/GOV/3000/pubsub/pull_next"
+  PUBSUB_ACK_SERVICE: "GOVSTACK/GOV/3000/pubsub/pull_ack"
 ---
 # Keeps inbox.json / api_logs.json across pod restarts and rescheduling.
 # Uses the default StorageClass, same as mysql-pvc in k8s/00-mysql.yaml.
