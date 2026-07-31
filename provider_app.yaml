@@ -101,7 +101,7 @@ spec:
     spec:
       containers:
       - name: provider-app-api
-        image: msahique/k8s_provider_test_app:v1
+        image: tejasmgautham/provider_test_app:v1
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
