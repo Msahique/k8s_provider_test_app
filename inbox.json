@@ -1,0 +1,29 @@
+[
+  {
+    "message_id": "ce1858c2",
+    "received_at": "2026-07-28T20:36:36.607435+00:00",
+    "sender": "127.0.0.1",
+    "event_type": "demo-event",
+    "request_type": "demo-event",
+    "room": "default-room",
+    "event": {
+      "patientId": 42,
+      "status": "admitted"
+    },
+    "http_method": "POST",
+    "endpoint": "/incoming_message",
+    "source_ip": "127.0.0.1",
+    "content_type": "application/json",
+    "user_agent": "PostmanRuntime/7.51.1",
+    "message": {
+      "eventType": "demo-event",
+      "event": {
+        "patientId": 42,
+        "status": "admitted"
+      },
+      "room": "default-room"
+    },
+    "acknowledgement": "Event 'demo-event' received on room 'default-room' and stored in inbox.",
+    "acknowledged_to": "127.0.0.1"
+  }
+]

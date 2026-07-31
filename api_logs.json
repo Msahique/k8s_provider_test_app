@@ -1,0 +1,164 @@
+[
+  {
+    "id": "d63b817f1cae",
+    "timestamp": "2026-07-28T19:46:45.486093+00:00",
+    "caller": "127.0.0.1",
+    "caller_port": 64517,
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "method": "GET",
+    "endpoint": "/hello",
+    "query_params": null,
+    "content_type": "",
+    "request_body": null,
+    "status_code": 200,
+    "acknowledgement": {
+      "application": "Simple FastAPI Database API",
+      "message": "Hello from FastAPI!",
+      "timestamp": "2026-07-28T19:46:45.487093+00:00"
+    },
+    "responded_to": "127.0.0.1",
+    "duration_ms": 2.0
+  },
+  {
+    "id": "d66348b6f136",
+    "timestamp": "2026-07-28T20:14:25.452849+00:00",
+    "caller": "127.0.0.1",
+    "caller_port": 65328,
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "method": "GET",
+    "endpoint": "/hello",
+    "query_params": null,
+    "content_type": "",
+    "request_body": null,
+    "status_code": 200,
+    "acknowledgement": {
+      "application": "Simple FastAPI Database API",
+      "message": "Hello from FastAPI!",
+      "timestamp": "2026-07-28T20:14:25.453849+00:00"
+    },
+    "responded_to": "127.0.0.1",
+    "duration_ms": 2.0
+  },
+  {
+    "id": "99d3926edbb8",
+    "timestamp": "2026-07-28T20:14:48.900187+00:00",
+    "caller": "127.0.0.1",
+    "caller_port": 65337,
+    "user_agent": "PostmanRuntime/7.51.1",
+    "method": "POST",
+    "endpoint": "/qry",
+    "query_params": null,
+    "content_type": "application/json",
+    "request_body": {
+      "qry": "show tables;"
+    },
+    "status_code": 200,
+    "acknowledgement": {
+      "success": true,
+      "result_set": true,
+      "rows": 2,
+      "columns": [
+        "Tables_in_ca_db"
+      ],
+      "data": [
+        {
+          "Tables_in_ca_db": "ca_root"
+        },
+        {
+          "Tables_in_ca_db": "issued_cert"
+        }
+      ],
+      "timestamp": "2026-07-28T20:14:52.033593+00:00"
+    },
+    "responded_to": "127.0.0.1",
+    "duration_ms": 3134.45
+  },
+  {
+    "id": "80bd8a25d8b8",
+    "timestamp": "2026-07-28T20:15:19.932028+00:00",
+    "caller": "127.0.0.1",
+    "caller_port": 65350,
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "method": "GET",
+    "endpoint": "/hello",
+    "query_params": null,
+    "content_type": "",
+    "request_body": null,
+    "status_code": 200,
+    "acknowledgement": {
+      "application": "Simple FastAPI Database API",
+      "message": "Hello from FastAPI!",
+      "timestamp": "2026-07-28T20:15:19.932028+00:00"
+    },
+    "responded_to": "127.0.0.1",
+    "duration_ms": 1.0
+  },
+  {
+    "id": "4b0a8f7a23cd",
+    "timestamp": "2026-07-28T20:35:34.905976+00:00",
+    "caller": "127.0.0.1",
+    "caller_port": 49849,
+    "user_agent": "PostmanRuntime/7.51.1",
+    "method": "GET",
+    "endpoint": "/incoming_message",
+    "query_params": null,
+    "content_type": "application/json",
+    "request_body": {
+      "eventType": "demo-event",
+      "event": {
+        "patientId": 42,
+        "status": "admitted"
+      },
+      "room": "default-room"
+    },
+    "status_code": 405,
+    "acknowledgement": {
+      "detail": "Method Not Allowed"
+    },
+    "responded_to": "127.0.0.1",
+    "duration_ms": 1.0
+  },
+  {
+    "id": "f30aa68c6654",
+    "timestamp": "2026-07-28T20:36:36.606435+00:00",
+    "caller": "127.0.0.1",
+    "caller_port": 49910,
+    "user_agent": "PostmanRuntime/7.51.1",
+    "method": "POST",
+    "endpoint": "/incoming_message",
+    "query_params": null,
+    "content_type": "application/json",
+    "request_body": {
+      "eventType": "demo-event",
+      "event": {
+        "patientId": 42,
+        "status": "admitted"
+      },
+      "room": "default-room"
+    },
+    "status_code": 200,
+    "acknowledgement": {
+      "success": true,
+      "message_id": "ce1858c2",
+      "received_at": "2026-07-28T20:36:36.607435+00:00",
+      "sender": "127.0.0.1",
+      "eventType": "demo-event",
+      "room": "default-room",
+      "event": {
+        "patientId": 42,
+        "status": "admitted"
+      },
+      "received_message": {
+        "eventType": "demo-event",
+        "event": {
+          "patientId": 42,
+          "status": "admitted"
+        },
+        "room": "default-room"
+      },
+      "acknowledgement": "Event 'demo-event' received on room 'default-room' and stored in inbox."
+    },
+    "responded_to": "127.0.0.1",
+    "duration_ms": 6.0
+  }
+]

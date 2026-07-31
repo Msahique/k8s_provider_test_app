@@ -1,0 +1,116 @@
+# Provider application: the FastAPI "Simple FastAPI Database API".
+# Serves a dashboard on / (APIs, Logs, Inbox tabs), a /qry endpoint that
+# returns real rows from MySQL, and /incoming_message which stores consumer
+# messages in inbox.json.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fastapi-db-config
+data:
+  IM_DB_HOST: "mysql"
+  IM_DB_PORT: "3306"
+  IM_DB_USER: "root"
+  IM_DB_PASS: "root"
+  IM_DB_NAME: ""            # blank = connect without selecting a database
+  IM_DATA_DIR: "/app/data"  # where inbox.json and api_logs.json are written
+  IM_LOG_MAX: "500"         # audit log ring buffer size
+  IM_INBOX_MAX: "500"       # inbox ring buffer size
+  IM_LOG_HEALTH: "false"    # set true to also log kubelet probe traffic
+  IM_DEFAULT_ROOM: "default-room"  # used when an event arrives without a room
+
+---
+# Keeps inbox.json / api_logs.json across pod restarts and rescheduling.
+# Uses the default StorageClass, same as mysql-pvc in k8s/00-mysql.yaml.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fastapi-db-api-data
+spec:
+  storageClassName: local-path
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-db-api
+  labels:
+    app: fastapi-db-api
+spec:
+  replicas: 1
+  # ReadWriteOnce volume: the old pod must release it before the new one
+  # starts, so a rolling update would deadlock.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: fastapi-db-api
+  template:
+    metadata:
+      labels:
+        app: fastapi-db-api
+    spec:
+      containers:
+      - name: fastapi-db-api
+        image: msahique/helloworld_test_k8s_app:v3
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - name: http
+          containerPort: 8000
+
+        envFrom:
+        - configMapRef:
+            name: fastapi-db-config
+
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: fastapi-db-api-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-db-api
+  labels:
+    app: fastapi-db-api
+spec:
+  type: ClusterIP
+  selector:
+    app: fastapi-db-api
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
