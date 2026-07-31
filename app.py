@@ -2044,7 +2044,7 @@ function psRender() {
     + ' &middot; base <code>' + esc(psSession.base) + '</code>'
     + '<br/>API key <code>' + esc(psSession.apiKey) + '</code> <span class="muted">(' + how + ')</span>'
     + (psSession.transport === "im"
-        ? '<br/><span class="chip PATCH">via IM</span> <span class="muted">pull and acknowledge are mediated by this app's security gateway'
+        ? '<br/><span class="chip PATCH">via IM</span> <span class="muted">pull and acknowledge are mediated by the security gateway of this application'
           + (psSession.transport_ready ? '' : ' &mdash; but SG_URL / PUBSUB_PULL_SERVICE / PUBSUB_ACK_SERVICE are not all set') + '</span>'
         : '<br/><span class="muted">polling the Pub/Sub BB directly</span>');
   $("psApp").textContent = psSession.applicationCode || "-";
