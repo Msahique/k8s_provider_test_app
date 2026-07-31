@@ -101,7 +101,7 @@ spec:
     spec:
       containers:
       - name: provider-app-api
-        image: msahique/helloworld_test_k8s_app:v3
+        image: msahique/k8s_provider_test_app:v1
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
